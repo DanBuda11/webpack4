@@ -1,10 +1,6 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
 import './styles/main.scss';
+import App from './components/App';
 
-console.log('Hello World!');
-
-const root = document.getElementById('root');
-const root2 = document.getElementById('root2');
-
-root.innerHTML = `<img src=${require('./images/big-img.jpg')} style="width: 300px;" />`;
-root2.innerHTML = `<img src=${require('./images/bird.png')} />`;
-root3.innerHTML = `<img src=${require('./images/apple.png')} />`;
+ReactDOM.render(<App />, document.getElementById('root'));
