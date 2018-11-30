@@ -8,11 +8,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   mode: 'production',
-  entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
-    publicPath: '/assets/',
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -29,12 +28,49 @@ module.exports = {
         use: [],
       },
       {
-        test: /\.css$/,
-        use: [{ loader: MiniCssExtractPlugin.loader }, 'css-loader'],
+        test: /\.scss$/,
+        use: [
+          { loader: MiniCssExtractPlugin.loader },
+          { loader: 'css-loader', options: { sourceMap: true } },
+          { loader: 'postcss-loader' },
+          { loader: 'sass-loader', options: { sourceMap: true } },
+        ],
       },
       {
-        test: /\.(png|svg|jpg|gif)$/,
-        use: ['file-loader'],
+        test: /\.(png|jpe?g|gif)$/,
+        use: [
+          {
+            // url-loader doesn't work with svg
+            loader: 'url-loader',
+            options: {
+              fallback: 'file-loader',
+              limit: 8192,
+              outputPath: 'images',
+              name: '[hash].[ext]',
+            },
+          },
+          {
+            loader: 'image-webpack-loader',
+            options: {},
+          },
+        ],
+      },
+      {
+        // haven't tested svg to see if it works
+        test: /\.svg$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'images/',
+              name: '[hash].[ext]',
+            },
+          },
+          {
+            loader: 'image-webpack-loader',
+            options: {},
+          },
+        ],
       },
     ],
   },

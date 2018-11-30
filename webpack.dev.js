@@ -1,6 +1,3 @@
-// Maybe go back to having --config mode="production" or whatever in package.json scripts
-// instead of having 2 config files?
-
 const webpack = require('webpack');
 const path = require('path');
 
@@ -11,8 +8,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 
 module.exports = {
-  mode: 'production',
-  // Don't need an entry, it defaults to ./src/index.js
+  mode: 'development',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
@@ -25,22 +21,10 @@ module.exports = {
         exclude: /node_modules/,
         use: ['babel-loader'],
       },
-      // {
-      //   test: /\.html$/,
-      //   use: [],
-      // },
       {
         test: /\.scss$/,
-
         use: [
-          // only use MiniCssExtractPlugin for production builds in place of style-loader
           { loader: 'style-loader' },
-          // {
-          //   loader:
-          //     process.env.NODE_ENV === 'production'
-          //       ? 'style-loader'
-          //       : MiniCssExtractPlugin.loader,
-          // },
           { loader: 'css-loader', options: { sourceMap: true } },
           { loader: 'postcss-loader' },
           { loader: 'sass-loader', options: { sourceMap: true } },
@@ -108,7 +92,7 @@ module.exports = {
         template: './src/index.html',
       },
       {
-        reload: false,
+        // reload: false,
       }
     ),
     new MiniCssExtractPlugin({
