@@ -5,35 +5,31 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
   mode: 'production',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
-    publicPath: '/',
+    filename: '[name].bundle.js',
+    // Public path causing errors for some reason when running npm run build but doesn't seem to screw anything up in dev mode
+    // publicPath: '/',
   },
   module: {
     rules: [
       {
-        test: /\.jsx?&/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
-        options: {
-          presets: ['@babel/preset-env'],
-        },
       },
-      {
-        test: /\.html&/,
-        use: [],
-      },
+
       {
         test: /\.scss$/,
         use: [
           { loader: MiniCssExtractPlugin.loader },
-          { loader: 'css-loader', options: { sourceMap: true } },
+          { loader: 'css-loader' },
           { loader: 'postcss-loader' },
-          { loader: 'sass-loader', options: { sourceMap: true } },
+          { loader: 'sass-loader' },
         ],
       },
       {
@@ -81,23 +77,31 @@ module.exports = {
     content: './dist',
   },
   devServer: {
+    contentBase: './src',
     compress: true,
     hot: true,
+    open: true,
   },
   plugins: [
     new CompressionPlugin({
-      test: /\.(jsx?|html)/,
+      test: /\.(jsx?|html)$/,
       filename: '[path].gz[query]',
       algorithm: 'gzip',
     }),
-    new webpack.SourceMapDevToolPlugin({}),
-    new HtmlWebpackPlugin(),
+    // new webpack.SourceMapDevToolPlugin({}),
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+    }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',
     }),
+    new CleanWebpackPlugin(['dist']),
   ],
   optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
     minimizer: [new UglifyJsPlugin()],
   },
 };
