@@ -53,6 +53,7 @@ module.exports = {
         test: /\.svg$/,
         use: [
           {
+            // When adding options to a loader, it's now passed in as an object with loader and options keys
             loader: 'file-loader',
             options: {
               outputPath: 'images/',
