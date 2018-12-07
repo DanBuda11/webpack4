@@ -170,3 +170,50 @@ if ('mode = prod logic goes here') {
   - also need to use UglifyJsPlugin
   - also need to turn on optimization.usedExports. This is added with mode=production
   - can set optimization.sideEffects: true. This will tree shake when libraries that give notice that they don't have side effects like not being written in ES6
+- What's the best way to set the env variable (prod or dev)? in scripts (--env.prod or --mode=production or --mode="production" or mode="production)? It looks like you can either use the "mode" route or the "NODE_ENV=" route as webpack 4 now has the "mode" option inside the config file.
+- Can do stuff like: devtool: IS_DEV ? 'source-map' : false where "IS_DEV" is the variable saying if it's in dev mode or not
+- what is resolve: {extensions: ['.js', '.json', '.css']} doing in a config file?
+- Another example for dev vs prod, where variables common, production, and development are set as arrays with the plugins used in each environment stored in them:
+
+```js
+plugins: IS_DEV ? [...common, ...development] : [...common, ...production];
+```
+
+- check out the stats option for webpack.config file - tons of options for what you'll see in the terminal. One article recommends setting it to detailed or verbose to get the most info.
+- running "webpack -p" tells it it's in production mode, but that won't get relayed to the config files using this method
+- Check out webpack-bundle-analyzer
+- Should I also chunk split CSS?
+- Apparently the DefinePlugin is used to set global constants (env: prod or dev):
+
+```js
+var ENV = process.env.NODE_ENV;
+
+var baseConfig = {
+  // ...
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(ENV)
+    })
+  ]
+};
+
+"scripts": {
+  "start": "NODE_ENV=development webpack-dev-server",
+  "build": "NODE_ENV=production webpack"
+}
+```
+
+- And for adding plugins based on which env you're in:
+
+```js
+var ENV = process.env.NODE_ENV;
+
+var baseConfig = {
+  // ...
+  plugins: [],
+};
+
+if (ENV === 'production') {
+  baseConfig.plugins.push(new webpack.optimize.UglifyJsPlugin());
+}
+```
