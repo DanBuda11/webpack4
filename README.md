@@ -6,6 +6,7 @@
 - use optimization splitChunks instead of CommonChunksPlugin
 - Best way to put in suite of favicons? HtmlWebpackPlugin says it can automatically inject manifest and favicons in addition to css & js
 - figure out webpack-merge and split config files into dev, prod, and common, or at least dev & prod and determine best way to run scripts with production & development modes; start with just a dev and prod config setup and maybe add in webpack-merge stuff later
+- `production` is the default mode for webpack so keep that in mind when developing "if-then" type stuff in the config file
 
   - or just have 1 config file, set mode prod or dev in package.json scripts, and have logic in config file to determine what stuff should run in dev or prod modes
   - from Webpack docs:
@@ -71,7 +72,6 @@
 * `npm start` is opening 2 browser tabs, one at port 8080 and one at port 3000 and getting a weird console error for the one opening at port 8080 (last time I checked it was not showing the console error anymore)
 * how do I use the gzipped files I'm creating when running npm run build? Do they just get created and used automatically when deploying with something like Netlify?
 * Check options for all loaders and plugins being used
-* Should babel presets be set in package.json, separate .babelrc file, or with the babel-loader code in the webpack.config?
 * parts I need:
   - entry
   - output
@@ -81,12 +81,6 @@
 
 ### Notes from saved Feedly articles:
 
-- How exactly to I want to name the output files?
-  - [name].bundle.js
-  - [name].[chunkhash].bundle.js
-  - [name].[chunkhash].js
-  - etc
-  - using chunkhash allows for renaming of the file when the content changes, so a browers will know to redownload since it's different than what's cached. This should also be good for code splitting vendor code since that will barely ever change.
 - can set minimum sizes for files when using optimization.splitChunks
   - will need to look at this further to make sure I'm splitting out vendor, etc. code without code redundandcies in different chunks.
 - UglifyJsPlugin is automatically used in production mode. By default it will go over every .js file. The default settings of UglifyJsPlugin are minimize: true and minimizer: UglifyJsPlugin(). Also need to check out the uglifyOptions: {} settings which has a compress: option as well as an output: option. The output option allows you to set drop_console: true (false by default) that removes all console.log calls in the compiled code.
@@ -171,7 +165,6 @@ if ('mode = prod logic goes here') {
   - also need to use UglifyJsPlugin
   - also need to turn on optimization.usedExports. This is added with mode=production
   - can set optimization.sideEffects: true. This will tree shake when libraries that give notice that they don't have side effects like not being written in ES6
-- What's the best way to set the env variable (prod or dev)? in scripts (--env.prod or --mode=production or --mode="production" or mode="production)? It looks like you can either use the "mode" route or the "NODE_ENV=" route as webpack 4 now has the "mode" option inside the config file.
 - Can do stuff like: devtool: IS_DEV ? 'source-map' : false where "IS_DEV" is the variable saying if it's in dev mode or not
 - what is resolve: {extensions: ['.js', '.json', '.css']} doing in a config file?
 - Another example for dev vs prod, where variables common, production, and development are set as arrays with the plugins used in each environment stored in them:
