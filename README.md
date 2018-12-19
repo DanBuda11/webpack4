@@ -2,6 +2,7 @@
 
 ### Need to do:
 
+- List of which plugins/loaders go with dev/prod
 - use optimization splitChunks instead of CommonChunksPlugin
 - Best way to put in suite of favicons? HtmlWebpackPlugin says it can automatically inject manifest and favicons in addition to css & js
 - figure out webpack-merge and split config files into dev, prod, and common, or at least dev & prod and determine best way to run scripts with production & development modes; start with just a dev and prod config setup and maybe add in webpack-merge stuff later
@@ -67,7 +68,7 @@
   - eslint, stylelint
   - rucksack?
   - cache busting?
-* `npm start` is opening 2 browser tabs, one at port 8080 and one at port 3000 and getting a weird console error for the one opening at port 8080
+* `npm start` is opening 2 browser tabs, one at port 8080 and one at port 3000 and getting a weird console error for the one opening at port 8080 (last time I checked it was not showing the console error anymore)
 * how do I use the gzipped files I'm creating when running npm run build? Do they just get created and used automatically when deploying with something like Netlify?
 * Check options for all loaders and plugins being used
 * Should babel presets be set in package.json, separate .babelrc file, or with the babel-loader code in the webpack.config?
