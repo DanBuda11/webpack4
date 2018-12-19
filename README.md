@@ -1,5 +1,7 @@
 # Webpack 4 + Babel 7 + React 16 Framework
 
+Need to start over with a new new webpack.config.js and set it up as a function, mostly empty, and set all the prod vs. dev stuff up (the logic) first, then add just enough to test to see if running npm start vs npm run build are working correctly (as in, are the correct loaders & plugins being used in prod vs dev based on the logic set up in the config file)
+
 ### Need to do:
 
 - List of which plugins/loaders go with dev/prod
