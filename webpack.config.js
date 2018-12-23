@@ -1,29 +1,22 @@
-// This will be the final config file that includes logic for using both dev and prod modes
-
-// import stuff like webpack & path
 const webpack = require('webpack');
 const path = require('path');
 
-// import plugins
-// Inside this plugins const, only put in plugins used by both dev and prod modes, then .push() other plugins based on if you're in dev or prod mode:
-// if (env.mode = dev) {
-//plugins.push('dev plugins')
-//}
+const CompressionPlugin = require('compression-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin;
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
-// start main config code
-module.exports = (env, argv) => {
-  const plugins = [];
+module.exports = (env, arg) => {
+  // Everything that's the same in dev and prod goes in this config variable
 
-  console.log('env: ', env);
-  console.log('argv: ', argv);
-
-  return {
-    // don't need entry
+  let config = {
     output: {
       path: path.resolve(__dirname, 'dist'),
-      // Consider removing the [name] part of this if it seems unnecessary. Keep the chunkhash because it will be good
-      // code splitting for vendor files.
-      filename: '[name].[chunkhash].bundle.js',
+      filename: '[name].[hash].bundle.js',
     },
     module: {
       rules: [
@@ -34,18 +27,117 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.scss$/,
-          use: [],
+          use: [
+            {
+              loader:
+                arg.mode === 'production'
+                  ? MiniCssExtractPlugin.loader
+                  : 'style-loader',
+            },
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: arg.mode === 'development' ? true : false,
+              },
+            },
+            { loader: 'postcss-loader' },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: arg.mode === 'development' ? true : false,
+              },
+            },
+          ],
         },
         {
           test: /\.(jpe?g|png|gif)$/,
-          use: [],
+          use: [
+            {
+              // url-loader doesn't work with svg
+              loader: 'url-loader',
+              options: {
+                fallback: 'file-loader',
+                limit: 8192,
+                outputPath: 'images',
+                name: '[hash].[ext]',
+              },
+            },
+            {
+              loader: 'image-webpack-loader',
+              options: {},
+            },
+          ],
         },
         {
+          // haven't tested svg to see if it works
           test: /\.svg$/,
-          use: [],
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                outputPath: 'images/',
+                name: '[hash].[ext]',
+              },
+            },
+            {
+              loader: 'image-webpack-loader',
+              options: {},
+            },
+          ],
         },
       ],
     },
-    plugins,
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: './src/index.html',
+      }),
+      new BundleAnalyzerPlugin(),
+    ],
   };
+
+  // Stuff only used in dev
+  if (arg.mode === 'development') {
+    config.devtool = 'source-map';
+    config.devServer = { hot: true };
+    config.plugins.push(
+      new BrowserSyncPlugin({
+        host: 'localhost',
+        port: 3000,
+        proxy: 'http://localhost:8080/',
+      }),
+      new webpack.HotModuleReplacementPlugin({})
+    );
+  }
+
+  // Stuff only used in prod
+  if (arg.mode === 'production') {
+    config.optimization = {
+      splitChunks: {
+        chunks: 'all',
+      },
+      minimizer: [
+        new UglifyJsPlugin({
+          uglifyOptions: {
+            output: {
+              comments: false,
+            },
+          },
+        }),
+      ],
+    };
+    config.plugins.push(
+      new MiniCssExtractPlugin({
+        filename: '[name].css',
+        chunkFilename: '[id].css',
+      }),
+      new CleanWebpackPlugin(['dist']),
+      new CompressionPlugin({
+        test: /\.(jsx?|html)$/,
+        filename: '[path].gz[query]',
+        algorithm: 'gzip',
+      })
+    );
+  }
+
+  return config;
 };
