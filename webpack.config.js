@@ -1,18 +1,18 @@
 const webpack = require('webpack');
 const path = require('path');
 
-const CompressionPlugin = require('compression-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CompressionWebpackPlugin = require('compression-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const UglifyjsWebpackPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = (env, arg) => {
   // Everything that's the same in dev and prod goes in this config variable
-
   let config = {
     output: {
       path: path.resolve(__dirname, 'dist'),
@@ -97,7 +97,7 @@ module.exports = (env, arg) => {
 
   // Stuff only used in dev
   if (arg.mode === 'development') {
-    config.devtool = 'source-map';
+    config.devtool = 'eval-source-map';
     config.devServer = { hot: true };
     config.plugins.push(
       new BrowserSyncPlugin({
@@ -114,12 +114,16 @@ module.exports = (env, arg) => {
     config.optimization = {
       splitChunks: {
         chunks: 'all',
+        name: false,
       },
       minimizer: [
-        new UglifyJsPlugin({
+        new UglifyjsWebpackPlugin({
           uglifyOptions: {
             output: {
               comments: false,
+            },
+            compress: {
+              drop_console: true,
             },
           },
         }),
@@ -127,15 +131,16 @@ module.exports = (env, arg) => {
     };
     config.plugins.push(
       new MiniCssExtractPlugin({
-        filename: '[name].css',
-        chunkFilename: '[id].css',
+        filename: '[name].[hash].css',
+        chunkFilename: '[id].[hash].css',
       }),
       new CleanWebpackPlugin(['dist']),
-      new CompressionPlugin({
+      new CompressionWebpackPlugin({
         test: /\.(jsx?|html)$/,
-        filename: '[path].gz[query]',
-        algorithm: 'gzip',
-      })
+        // filename: '[path].gz[query]',
+        // algorithm: 'gzip',
+      }),
+      new OptimizeCssAssetsPlugin({})
     );
   }
 
