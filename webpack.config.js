@@ -17,6 +17,7 @@ module.exports = (env, arg) => {
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: '[name].[hash:8].bundle.js',
+      filename: 'index.js',
     },
     module: {
       rules: [
@@ -119,10 +120,10 @@ module.exports = (env, arg) => {
   // Stuff only used in prod
   if (arg.mode === 'production') {
     config.optimization = {
-      splitChunks: {
-        chunks: 'all',
-        name: false,
-      },
+      // splitChunks: {
+      //   chunks: 'all',
+      //   name: false,
+      // },
       minimizer: [
         new UglifyjsWebpackPlugin({
           uglifyOptions: {
@@ -144,8 +145,6 @@ module.exports = (env, arg) => {
       new CleanWebpackPlugin(['dist']),
       new CompressionWebpackPlugin({
         test: /\.(jsx?|html)$/,
-        // filename: '[path].gz[query]',
-        // algorithm: 'gzip',
       }),
       new OptimizeCssAssetsPlugin({})
     );
