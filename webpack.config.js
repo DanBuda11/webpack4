@@ -16,8 +16,7 @@ module.exports = (env, arg) => {
   let config = {
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: '[name].[hash:8].bundle.js',
-      filename: 'index.js',
+      filename: '[name].[chunkhash].js',
     },
     module: {
       rules: [
@@ -39,6 +38,7 @@ module.exports = (env, arg) => {
               loader: 'css-loader',
               options: {
                 sourceMap: arg.mode === 'development' ? true : false,
+                importLoaders: 2,
               },
             },
             { loader: 'postcss-loader' },
@@ -120,10 +120,15 @@ module.exports = (env, arg) => {
   // Stuff only used in prod
   if (arg.mode === 'production') {
     config.optimization = {
-      // splitChunks: {
-      //   chunks: 'all',
-      //   name: false,
-      // },
+      splitChunks: {
+        cacheGroups: {
+          vendor: {
+            test: /node_modules/,
+            name: 'vendors',
+            chunks: 'all',
+          },
+        },
+      },
       minimizer: [
         new UglifyjsWebpackPlugin({
           uglifyOptions: {
@@ -138,10 +143,7 @@ module.exports = (env, arg) => {
       ],
     };
     config.plugins.push(
-      new MiniCssExtractPlugin({
-        filename: '[name].[hash:8].css',
-        chunkFilename: '[id].[hash:8].css',
-      }),
+      new MiniCssExtractPlugin({}),
       new CleanWebpackPlugin(['dist']),
       new CompressionWebpackPlugin({
         test: /\.(jsx?|html)$/,
