@@ -2,10 +2,6 @@
 
 ## To Do
 
-### Bundle Analyzer
-
-- Do I want it running in both dev and prod?
-
 ### publicPath
 
 - Do I need it at all?
@@ -19,7 +15,6 @@
 ### Dev Server
 
 - Need to set devServer/serve options correcly in dev config file.
-- Need to use it correctly with BrowserSyncPlugin (`npm start` was opening 2 browser tabs, one at port 8080 and one at port 3000 and showing a console error the for one opening at 8080 - this recently had gone away).
 
 ### Hot Module Replacement
 
@@ -33,47 +28,11 @@ if (module.hot) {
 
 - And this apparently can be added to index.js because it works on anything that is imported into index.js
 
-### For Reference
-
-- Code from original dev config file:
-
-```javascript
-  serve: {
-    port: 8080,
-    content: './dist',
-  },
-  devServer: {
-    contentBase: './src',
-    compress: true,
-    hot: true,
-    open: true,
-  },
-```
-
-- Code from original prod config file (do I need any of this in prod?):
-
-```javascript
-  serve: {
-    port: 3333,
-    content: './dist',
-  },
-  devServer: {
-    contentBase: './src',
-    compress: true,
-    hot: true,
-    open: true,
-  },
-```
-
 ### Linting
 
 - Add ESLint and Stylelint
 - Add rucksack?
 - Add cache busting?
-
-### gzip
-
-- Are they already working as they're supposed to?
 
 ### Tree Shaking
 

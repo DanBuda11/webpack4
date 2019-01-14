@@ -16,7 +16,7 @@ module.exports = (env, arg) => {
   let config = {
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: '[name].[hash].bundle.js',
+      filename: '[name].[hash:8].bundle.js',
     },
     module: {
       rules: [
@@ -59,7 +59,7 @@ module.exports = (env, arg) => {
                 fallback: 'file-loader',
                 limit: 8192,
                 outputPath: 'images',
-                name: '[hash].[ext]',
+                name: '[hash:8].[ext]',
               },
             },
             {
@@ -76,7 +76,7 @@ module.exports = (env, arg) => {
               loader: 'file-loader',
               options: {
                 outputPath: 'images/',
-                name: '[hash].[ext]',
+                name: '[hash:8].[ext]',
               },
             },
             {
@@ -91,20 +91,27 @@ module.exports = (env, arg) => {
       new HtmlWebpackPlugin({
         template: './src/index.html',
       }),
-      new BundleAnalyzerPlugin(),
     ],
   };
 
   // Stuff only used in dev
   if (arg.mode === 'development') {
     config.devtool = 'eval-source-map';
-    config.devServer = { hot: true };
+    config.devServer = {
+      contentBase: path.join(__dirname, 'src'),
+      compress: true,
+      hot: true,
+    };
     config.plugins.push(
-      new BrowserSyncPlugin({
-        host: 'localhost',
-        port: 3000,
-        proxy: 'http://localhost:8080/',
-      }),
+      new BrowserSyncPlugin(
+        {
+          host: 'localhost',
+          port: 3000,
+          proxy: 'http://localhost:8080/',
+        },
+        { reload: false }
+      ),
+      new BundleAnalyzerPlugin(),
       new webpack.HotModuleReplacementPlugin({})
     );
   }
@@ -131,8 +138,8 @@ module.exports = (env, arg) => {
     };
     config.plugins.push(
       new MiniCssExtractPlugin({
-        filename: '[name].[hash].css',
-        chunkFilename: '[id].[hash].css',
+        filename: '[name].[hash:8].css',
+        chunkFilename: '[id].[hash:8].css',
       }),
       new CleanWebpackPlugin(['dist']),
       new CompressionWebpackPlugin({
