@@ -16,7 +16,7 @@ module.exports = (env, arg) => {
   let config = {
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: '[name].[chunkhash].js',
+      filename: arg.mode === 'production' ? '[name].[chunkhash].js' : '[name].[hash].js',
     },
     module: {
       rules: [

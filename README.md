@@ -12,6 +12,6 @@ if (module.hot) {
 ```
 
 - And can I add the above to index.js or does it need to be added to all js files?
-- Add ESLint, Stylelint
-- Comment everything in the code as documentation and to remind myself what stuff does, as well as show others.
-- Redo README when done for good documentation.
+- Make a note that ESLint, Stylelint will be added
+- Comment everything in the code as documentation and to remind myself what stuff does, as well as show others
+- Redo README when done for good documentation

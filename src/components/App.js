@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import apple from '../images/apple.png';
-import bird from '../images/bird.png';
+import buddha from '../images/buddha.png';
 
 export default class App extends Component {
   render() {
     return (
-      <div className="background">
-        <h1>Hello React!</h1>
-        <img src={apple} />
-        <img src={bird} />
+      <div>
+        <h1>Hello World!</h1>
+        <h3>Webpack 4 + React 16 + Babel 7 Framework</h3>
+        <img src={buddha} />
       </div>
     );
   }
