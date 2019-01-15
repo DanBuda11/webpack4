@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import buddha from '../images/buddha.png';
+import buddha from '../images/buddha.jpeg';
 
 export default class App extends Component {
   render() {
