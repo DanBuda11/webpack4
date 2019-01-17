@@ -1,6 +1,8 @@
 # Webpack 4 + Babel 7 + React 16 Framework
 
-A front end React framework build with [Webpack](https://webpack.js.org/) v4, Babel 7 and SCSS. The focus is on overall performance by making use of code splitting, and minification of HTML, JavaScript, CSS and images.
+<kbd>![Image](webpack4.png)</kbd>
+
+A front end React framework built with [Webpack](https://webpack.js.org/) v4, Babel 7 and SCSS. The focus is on overall performance by making use of code splitting and minification of HTML, JavaScript, CSS and images.
 
 ## General Information
 

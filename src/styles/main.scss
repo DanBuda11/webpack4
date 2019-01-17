@@ -1,12 +1,21 @@
 * {
   font-family: sans-serif;
+  margin: 0;
 }
 
 body {
-  background: teal;
+  background: #87B6A7;
   text-align: center;
+  padding: 1em;
 }
 
 img {
   width: 30%;
+  max-width: 250px;
+  margin: 1em;
+}
+
+p {
+  max-width: 600px;
+  margin: 0 auto;
 }
