@@ -27,9 +27,7 @@ module.exports = (env, arg) => {
       path: path.resolve(__dirname, 'dist'),
       // Use chunkhash in production build only to avoid problems with HotModuleReplacement in development
       filename:
-        arg.mode === 'production'
-          ? '[name].[chunkhash].js'
-          : '[name].[hash].js',
+        arg.mode === 'production' ? '[name].[chunkhash].js' : '[name].js',
     },
     module: {
       rules: [
