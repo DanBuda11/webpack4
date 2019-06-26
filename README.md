@@ -2,7 +2,7 @@
 
 <kbd>![Image](webpack4.png)</kbd>
 
-A front end React framework built with [Webpack](https://webpack.js.org/) v4, Babel 7 and SCSS. The focus is on overall performance by making use of code splitting and minification of HTML, JavaScript, CSS and images.
+A front end React framework built with [Webpack](https://webpack.js.org/) v4, Babel 7 and SCSS. The focus is on overall performance by making use of code splitting and minification of HTML, JavaScript, CSS and images. The framework also includes configurations for ESLint, Stylelint and Prettier.
 
 ## General Information
 
@@ -60,6 +60,15 @@ JavaScript is minified with UglifyJsPlugin and converted to `gzip` with Compress
 
 Vendor, or dependency, code is split out from a project's JavaScript in production mode to improve browser load time and provide for cache busting.
 
-## To Do
+### Version Information
 
-Addition of ESLint and Stylelint configuration
+#### 1.1.0
+
+- Added `.eslintrc.json` and `.stylelintrc.json` with support for React, Prettier
+- Minor tweaks to `webpack.config.js` due to linting
+- Change to `clean-webpack-plugin` syntax in `webpack.config.js` due to semver breaking changes
+- Semver breaking changes to several dependencies
+
+#### 1.0.0
+
+- Initial release

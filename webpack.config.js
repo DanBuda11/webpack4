@@ -4,10 +4,9 @@ const path = require('path');
 // Browser Sync plugin for Webpack  to allow for external url for testing
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 // Bundle Analyzer to show contents and sizes of compiled JavaScript bundles
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin;
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 // Clean Webpack plugin to remove contents of existing dist folder prior to new build
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 // Compress assets
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
 // HTML Webpack plugin to create index.html file per provided template
@@ -21,7 +20,7 @@ const UglifyjsWebpackPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = (env, arg) => {
   // Everything that's the same in dev and prod goes in this config variable
-  let config = {
+  const config = {
     // Don't need an entry setting if using index.js in the root directory as the entry point
     output: {
       path: path.resolve(__dirname, 'dist'),
@@ -51,7 +50,7 @@ module.exports = (env, arg) => {
             {
               loader: 'css-loader',
               options: {
-                sourceMap: arg.mode === 'development' ? true : false,
+                sourceMap: arg.mode === 'development',
                 importLoaders: 2,
               },
             },
@@ -59,7 +58,7 @@ module.exports = (env, arg) => {
             {
               loader: 'sass-loader',
               options: {
-                sourceMap: arg.mode === 'development' ? true : false,
+                sourceMap: arg.mode === 'development',
               },
             },
           ],
@@ -127,8 +126,8 @@ module.exports = (env, arg) => {
           port: 3000,
           proxy: 'http://localhost:8080/',
         },
-        { reload: false }
-      )
+        { reload: false },
+      ),
       // Remove comments for BundleAnalyzerPlugin when its use is desired
       // new BundleAnalyzerPlugin(),
     );
@@ -163,11 +162,11 @@ module.exports = (env, arg) => {
     };
     config.plugins.push(
       new MiniCssExtractPlugin({}),
-      new CleanWebpackPlugin(['dist']),
+      new CleanWebpackPlugin(),
       new CompressionWebpackPlugin({
         test: /\.(jsx?|html)$/,
       }),
-      new OptimizeCssAssetsPlugin({})
+      new OptimizeCssAssetsPlugin({}),
       // Remove comments for BundleAnalyzerPlugin when its use is desired
       // new BundleAnalyzerPlugin()
     );
